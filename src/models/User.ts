@@ -14,6 +14,11 @@ User.init(
         prenom: {
             type: DataTypes.STRING,
         },
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true
+        },
     },
     {
         sequelize,

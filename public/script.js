@@ -15,8 +15,37 @@ async function loadUsers() {
 
         users.forEach(user => {
             const li = document.createElement("li");
-            li.className = "list-group-item";
-            li.textContent = `${user.nom} ${user.prenom}`;
+            li.className = "list-group-item d-flex justify-content-between align-items-center list-group-item-action fade-in";
+            
+            //Texte utilisateurs
+            const span = document.createElement("span");
+            span.textContent = `${user.nom} ${user.prenom}`;
+
+            //bouton delete
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "X";
+            deleteBtn.classList.add("btn", "btn-danger", "btn-sm");
+
+            deleteBtn.addEventListener("click", async () => {
+                try {
+                    const response = await fetch(`/api/users/${user.id}`, {
+                        method: "DELETE"
+                    });
+
+                    if (!response.ok) throw new Error("Erreur suppression");
+
+                    //raffraichir la liste après suppression
+                    loadUsers();
+
+                } catch(error) {
+                    console.error(error);
+                    alert("Impossible de supprimer l'utilisateur");
+                }
+            });
+            
+            li.appendChild(span);
+            li.appendChild(deleteBtn);
+
             userList.appendChild(li);
         });
     } catch (error) {
