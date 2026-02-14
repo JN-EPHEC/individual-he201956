@@ -11,22 +11,23 @@
     <div class="container mt-5">
         <h1 class="text-center mb-4">Liste des étudiants</h1>
 
-        <ul class="list-group mb-4">
-        </ul>
 
-        <form class="row g-3">
-            <div class="col-md-6">
-                <input type="text" placeholder="Nom" class="form-control" required>
+        <form class="row g-2 align-items-center" id="studentForm">
+            <div class="col-md-4">
+                <input type="text" id="nom" placeholder="Nom" class="form-control" required>
             </div>
-            <div class="col-md-6">
-                <input type="text" placeholder="Prenom" class="form-control" required>
+            <div class="col-md-4">
+                <input type="text" id="prenom" placeholder="Prenom" class="form-control" required>
             </div>
-            <div class="col-12 text-center">
+            <div class="col-md-4 d-grid">
                 <button type="submit" class="btn btn-primary">Ajouter</button>
             </div>
         </form>
 
-    </div>
+        <ul class="list-group mb-4" id="studentList">
+        </ul>
 
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
