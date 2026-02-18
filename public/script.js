@@ -1,16 +1,24 @@
 const userList = document.getElementById("studentList");
 const form = document.getElementById("studentForm");
+const searchInput = document.getElementById("searchInput");
 
+searchInput.addEventListener("input", () => {
+    loadUsers(); //recharge la liste à chaque frappe avec le terme de recherche
+});
 //fonction pour récupérer les utilisateurs et remplir la liste
 async function loadUsers() {
-    //on vide d'abord la liste
-    userList.innerHTML = "";
+
+    const searchTerm = document.getElementById("searchInput")?.value.trim() || "";
+    const url = searchTerm ? `/api/users?search=${encodeURIComponent(searchTerm)}` : "/api/users";
 
     try {
-        const response = await fetch("/api/users"); //C'est le GET /api/users
+        const response = await fetch(url); //C'est le GET /api/users ou /api/users?search=...
         if (!response.ok) throw new Error("Erreur lors de la récupération des utilisateurs");
 
         const users = await response.json();
+
+         //on vide d'abord la liste
+        userList.innerHTML = "";
 
 
         users.forEach(user => {
@@ -20,6 +28,10 @@ async function loadUsers() {
             //Texte utilisateurs
             const span = document.createElement("span");
             span.textContent = `${user.nom} ${user.prenom}`;
+
+            // Conteneur pour les boutons
+            const btnGroup = document.createElement("div");
+            btnGroup.classList.add("d-flex", "gap-2");
 
             //bouton delete
             const deleteBtn = document.createElement("button");
@@ -42,9 +54,28 @@ async function loadUsers() {
                     alert("Impossible de supprimer l'utilisateur");
                 }
             });
+
+            //Bouton modifier
+            const editBtn = document.createElement("button");
+            editBtn.innerHTML = '<i class="bi bi-pencil"></i>';
+            editBtn.classList.add("btn", "btn-warning", "btn-sm");
+            //Gestion bouton modifier
+            editBtn.addEventListener("click", () => {
+                document.getElementById("nom").value = user.nom;
+                document.getElementById("prenom").value = user.prenom;
+
+                //on sauvegarde l'id pour le PUT
+                form.dataset.editId = user.id;
+                form.querySelector("button").textContent = "Enregistrer";
+            })
             
+            // Ajouter les boutons dans le groupe
+            btnGroup.appendChild(editBtn);
+            btnGroup.appendChild(deleteBtn);
+
+
             li.appendChild(span);
-            li.appendChild(deleteBtn);
+            li.appendChild(btnGroup);
 
             userList.appendChild(li);
         });
@@ -68,22 +99,39 @@ form.addEventListener("submit", async (e) => {
 
     if (!nom || !prenom) return alert("Veuillez remplir tous les champs");
 
+    const editId = form.dataset.editId; //permet de récupérer l'id si on est en modification
+
     try {
-        const response = await fetch("/api/users", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ nom: `${nom}`, prenom: `${prenom}`})
-        });
+        if (editId) {
+            // PUT /api/users/:id
+            const response = await fetch(`/api/users/${editId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ nom: `${nom}`, prenom: `${prenom}`})
+            });
 
-        if (!response.ok) throw new Error("Erreur lors de l'ajout de l'utilisateur");
+            if (!response.ok) throw new Error("Erreur lors de l'ajout de l'utilisateur");
 
-        //rafraichir la liste sans recharger la page
-        loadUsers();
+            delete form.dataset.editId; // on reset l'id après modification
+            form.querySelector("button").textContent = "Ajouter";
+        } else {
+            //Post /api/users
+            const response = await fetch("/api/users", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({nom: `${nom}`, prenom: `${prenom}`})
+            });
+            if (!response.ok) throw new Error("Erreur lors de l'ajout");
+        }
 
-        //reset du formulaire
-        form.reset();
+            //reset du formulaire
+            form.reset();
+            //rafraichir la liste sans recharger la page
+            loadUsers();
+
+
     } catch(error) {
         console.error(error);
         alert("Impossible d'ajouter l'utilisateurs");
