@@ -62,7 +62,7 @@ export default router;
 
 
 
-/* commande pour afficher dans curl :
+/* commande pour afficher dans terminal :
 
 POST :
 

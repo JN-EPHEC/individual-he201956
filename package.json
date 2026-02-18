@@ -9,17 +9,15 @@
   },
   "keywords": [],
   "author": "",
+  
   "license": "ISC",
   "type": "module",
   "devDependencies": {
     "@types/express": "^5.0.6",
-    "@types/sequelize": "^4.28.20",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "express": "^5.2.1",
-    "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7"
+    "express": "^5.2.1"
   }
 }
