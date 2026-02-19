@@ -1,20 +1,13 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
 import User from "../models/User.js";
+import * as userController from "../controllers/userController.js";
+
 
 const router = Router();
 
 //récupère tous les users de la DB
-router.get("/", async(req: Request, res: Response)=> {
-    try {
-        const users = await User.findAll();
-        res.json(users);
-    } catch (error) {
-        res.status(500).json({ message: "Erreur serveur"});
-    }
-
-});
-
+router.get("/", userController.getAllUsers);
 
 /*router.get("/:id", async(req: Request, res: Response) => {
     try {
@@ -29,32 +22,11 @@ router.get("/", async(req: Request, res: Response)=> {
 });*/
 
 //créer un nouvel utilisateur
-router.post("/", async(req: Request, res: Response) => {
-    try {
-        const { nom, prenom } = req.body;
-        const newUser = await User.create({ nom, prenom});
-
-        res.status(201).json(newUser);
-    } catch (error) {
-        res.status(400).json({ message: "Erreur création utilisateur "});
-    }
-});
+router.post("/", userController.postUsers);
 
 
-
-router.delete("/:id", async (req: Request, res: Response) => {
-    try {
-        const user = await User.findByPk(Number(req.params.id));
-
-        if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
-
-        await user.destroy();
-
-        res.json({ message: "Utilisateur supprimé "});
-    } catch (error) {
-        res.status(500).json({message: "Erreur suppression" }) ;
-    }
-});
+//supprimer un utilisateur
+router.delete("/:id", userController.deleteUsers);
 
 
 
