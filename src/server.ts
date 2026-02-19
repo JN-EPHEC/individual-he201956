@@ -1,14 +1,20 @@
+console.log("server.ts démarre");
 import express from "express";
 import type { Request, Response } from "express";
-import userRoutes from "./routes/userRoutes.js";
-import sequelize from "./config/database.js";
-import "./models/User.js";
+import userRoutes from "./routes/userRoutes";
+import sequelize from "./config/database";
+import "./models/User";
 import path from "path";
+import { requestLogger } from "./middlewares/logger";
+import { requestErrorHandler } from "./middlewares/errorHandler";
 
+console.log('essais après import');
 const app = express();
 const port = 3000;
 
 app.use(express.json());
+
+app.use(requestLogger);
 
 const publicPath = path.resolve("./public");
 app.use(express.static(publicPath));
@@ -20,25 +26,14 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use("/api/users", userRoutes);
 
-/*app.get('/api/data', (req: Request, res: Response) => {
-    const etudiants = [
-        { id: 1, nom: "Dupont", prenom: "Jean" },
-        { id: 2, nom: "Martin", prenom: "Sophie" },
-        { id: 3, nom: "Doe", prenom: "John" },
-    ];
-    res.json(etudiants);
+console.log('eesaais');
+
+app.use((req, res, next) => {
+    const error = new Error(`Route ${req.originalUrl} non trouvée`);
+    next(error); // passe l'erreur au middleware global
 });
 
-app.get('/api/hello/:name', (req: Request<{ name: string }>, res: Response) => {
-    const { name } = req.params;
-
-    const now = new Date();
-
-    res.json({
-        message: `Bonjour ${name} !`,
-        timestamp: now.toISOString()
-    });
-})*/
+app.use(requestErrorHandler);
 
 (async () => {
     try {
@@ -54,4 +49,6 @@ app.get('/api/hello/:name', (req: Request<{ name: string }>, res: Response) => {
 
     }
 })();
+
+
 
