@@ -1,4 +1,3 @@
-console.log("server.ts démarre");
 import express from "express";
 import type { Request, Response } from "express";
 import userRoutes from "./routes/userRoutes";
@@ -8,7 +7,6 @@ import path from "path";
 import { requestLogger } from "./middlewares/logger";
 import { requestErrorHandler } from "./middlewares/errorHandler";
 
-console.log('essais après import');
 const app = express();
 const port = 3000;
 
@@ -26,7 +24,6 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use("/api/users", userRoutes);
 
-console.log('eesaais');
 
 app.use((req, res, next) => {
     const error = new Error(`Route ${req.originalUrl} non trouvée`);
