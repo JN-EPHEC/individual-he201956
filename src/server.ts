@@ -6,9 +6,12 @@ import "./models/User";
 import path from "path";
 import { requestLogger } from "./middlewares/logger";
 import { requestErrorHandler } from "./middlewares/errorHandler";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./config/swagger";
 
 const app = express();
 const port = 3000;
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(express.json());
 
@@ -26,10 +29,10 @@ app.use("/api/users", userRoutes);
 
 
 app.use((req, res, next) => {
-    const error = new Error(`Route ${req.originalUrl} non trouvée`);
-    next(error); // passe l'erreur au middleware global
+    const error: any = new Error(`Route ${req.originalUrl} non trouvée`);
+    error.status = 404;
+    next(error);
 });
-
 app.use(requestErrorHandler);
 
 (async () => {
