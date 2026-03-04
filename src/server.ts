@@ -8,10 +8,13 @@ import { requestLogger } from "./middlewares/logger";
 import { requestErrorHandler } from "./middlewares/errorHandler";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger";
+import cors from "cors";
 
 const app = express();
 const port = 3000;
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use(cors());
 
 app.use(express.json());
 
