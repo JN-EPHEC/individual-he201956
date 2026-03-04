@@ -2,6 +2,7 @@ import { Router } from "express";
 import type { Request, Response } from "express";
 import User from "../models/User.js";
 import * as userController from "../controllers/userController";
+import { checkIdParam } from "../middlewares/checkIdParam";
 
 const router = Router();
 
@@ -11,11 +12,20 @@ const router = Router();
  *  get:
  *      summary: Récupère la liste des utilisateurs
  *      tags: [Users]
+ *      parameters:
+  *       - in: query
+ *         name: search
+ *         required: false
+ *         schema:
+ *              type: string
+ *         description: Mot-clé pour rechercher par nom ou prénom
  *      responses:
  *          200:
- *              description: Succès
+ *              description: Liste des utilisateurs récupérée avec succès
+ *          500:
+ *              description: Erreur interne du serveur
  */
-router.get("/", userController.getAllUsers);
+router.get("/:id", checkIdParam, userController.getAllUsers);
 
 /*router.get("/:id", async(req: Request, res: Response) => {
     try {
@@ -36,40 +46,93 @@ router.get("/", userController.getAllUsers);
  *  post:
  *      summary: crée un nouvel utilisateur
  *      tags: [Users]
+ *      requestBody:
+ *          required: true
+ *          content: 
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          nom:
+ *                              type: string
+ *                          prenom:
+ *                              type: string
  *      responses:
- *          200:
- *              description: Succès
+ *          201:
+ *              description: Utilisateur créé avec succès
+ *          400:
+ *              description: Données invalide
+ *          500:
+ *              description: Erreur interne du serveur
+ *      
  */
-router.post("/", userController.postUsers);
+router.post("/:id", checkIdParam, userController.postUsers);
 
 
 
 /**
  * @swagger
- * /api/users:
+ * /api/users/{id}:
  *  delete:
  *      summary: supprime un utilisateur
  *      tags: [Users]
+ *      parameters:
+  *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *              type: integer
+ *         description: ID de l'utilisateur
  *      responses:
  *          200:
- *              description: Succès
+ *              description: Utilisateur supprimé avec succès
+ *          400:
+ *              description: ID invalide
+ *          404:
+ *              description: Utilisateur non trouvé
+ *          500:
+ *              description: Erreur interne du serveur
  */
-router.delete("/:id", userController.deleteUsers);
+router.delete("/:id", checkIdParam, userController.deleteUsers);
 
 
 
 
 /**
  * @swagger
- * /api/users:
+ * /api/users/{id}:
  *  put:
  *      summary: modifie un utilisateur
  *      tags: [Users]
+ *      parameters:
+  *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *              type: integer
+ *         description: ID de l'utilisateur
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          nom:
+ *                              type: string
+ *                          prenom:
+ *                              type: string
  *      responses:
  *          200:
- *              description: Succès
+ *              description: Utilisateur mis à jour avec succès
+ *          400:
+ *              description: Données invalides ou ID invalide
+ *          404:
+ *              description: Utilisateur non trouvé
+ *          500:
+ *              description: Erreur interne du serveur
  */
-router.put("/:id", userController.putUsers);
+router.put("/:id", checkIdParam, userController.putUsers);
 
 
 export default router;

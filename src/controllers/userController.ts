@@ -29,6 +29,9 @@ export const getAllUsers =  async(req: Request, res: Response, next: NextFunctio
 export const postUsers = async(req: Request, res: Response, next: NextFunction) => {
     try {
         const { nom, prenom } = req.body;
+        if (!nom || !prenom) {
+            return res.status(400).json({ message: "Nom et prénom requis" });
+        };
         const newUser = await User.create({ nom, prenom});
 
         res.status(201).json(newUser);
@@ -43,7 +46,7 @@ export const deleteUsers =  async (req: Request, res: Response, next: NextFuncti
     try {
         const user = await User.findByPk(Number(req.params.id));
 
-        if (!user) return next(new Error("Utilisateur non trouvé" ));
+        if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
 
         await user.destroy();
 
