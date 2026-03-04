@@ -5,7 +5,16 @@ import * as userController from "../controllers/userController";
 
 const router = Router();
 
-//récupère tous les users de la DB
+/**
+ * @swagger
+ * /api/users:
+ *  get:
+ *      summary: Récupère la liste des utilisateurs
+ *      tags: [Users]
+ *      responses:
+ *          200:
+ *              description: Succès
+ */
 router.get("/", userController.getAllUsers);
 
 /*router.get("/:id", async(req: Request, res: Response) => {
@@ -20,40 +29,47 @@ router.get("/", userController.getAllUsers);
     }
 });*/
 
-//créer un nouvel utilisateur
+
+/**
+ * @swagger
+ * /api/users:
+ *  post:
+ *      summary: crée un nouvel utilisateur
+ *      tags: [Users]
+ *      responses:
+ *          200:
+ *              description: Succès
+ */
 router.post("/", userController.postUsers);
 
 
-//supprimer un utilisateur
+
+/**
+ * @swagger
+ * /api/users:
+ *  delete:
+ *      summary: supprime un utilisateur
+ *      tags: [Users]
+ *      responses:
+ *          200:
+ *              description: Succès
+ */
 router.delete("/:id", userController.deleteUsers);
 
 
 
-//modifier un utilisateur
-router.put("/:id", async(req: Request, res: Response) => {
-    try {
-        const { nom, prenom } = req.body;
-        const id = Number(req.params.id);
 
-
-        //validation
-        if (!nom || !prenom) {
-            return res.status(400).json({ message: "Nom et prénom requis" });
-        }
-
-        const user = await User.findByPk(id);
-
-        if (!user) {
-            return res.status(404).json({ message: "Utilisateur non troué" });
-        }
-
-        await user.update({ nom, prenom });
-
-        res.status(200).json(user);
-    } catch (error) {
-        res.status(500).json({ message: "Erreur mise à jour" });
-    }
-});
+/**
+ * @swagger
+ * /api/users:
+ *  put:
+ *      summary: modifie un utilisateur
+ *      tags: [Users]
+ *      responses:
+ *          200:
+ *              description: Succès
+ */
+router.put("/:id", userController.putUsers);
 
 
 export default router;
