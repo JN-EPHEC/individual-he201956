@@ -1,13 +1,13 @@
 import express from "express";
 import type { Request, Response } from "express";
-import userRoutes from "./routes/userRoutes";
-import sequelize from "./config/database";
-import "./models/User";
+import userRoutes from "./routes/userRoutes.js";
+import sequelize from "./config/database.js";
+import "./models/User.js";
 import path from "path";
-import { requestLogger } from "./middlewares/logger";
-import { requestErrorHandler } from "./middlewares/errorHandler";
+import { requestLogger } from "./middlewares/logger.js";
+import { requestErrorHandler } from "./middlewares/errorHandler.js";
 import swaggerUi from "swagger-ui-express";
-import { swaggerSpec } from "./config/swagger";
+import { swaggerSpec } from "./config/swagger.js";
 import cors from "cors";
 
 const app = express();

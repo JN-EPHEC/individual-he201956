@@ -1,16 +1,59 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
 import User from "../models/User.js";
-import * as userController from "../controllers/userController";
-import { checkIdParam } from "../middlewares/checkIdParam";
+import * as userController from "../controllers/userController.js";
+import { checkIdParam } from "../middlewares/checkIdParam.js";
 
 const router = Router();
+
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   get:
+ *     summary: Récupère un utilisateur par son ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de l'utilisateur à récupérer
+ *     responses:
+ *       200:
+ *         description: Utilisateur récupéré avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 nom:
+ *                   type: string
+ *                 prenom:
+ *                   type: string
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
+ *       400:
+ *         description: ID invalide (non entier ou <= 0)
+ *       404:
+ *         description: Utilisateur non trouvé
+ *       500:
+ *         description: Erreur interne du serveur
+ */
+router.get("/:id", checkIdParam, userController.getUserById);
 
 /**
  * @swagger
  * /api/users:
  *  get:
- *      summary: Récupère la liste des utilisateurs
+ *      summary: Récupère la liste de tout les utilisateurs
  *      tags: [Users]
  *      parameters:
   *       - in: query
@@ -25,7 +68,7 @@ const router = Router();
  *          500:
  *              description: Erreur interne du serveur
  */
-router.get("/:id", checkIdParam, userController.getAllUsers);
+router.get("/", userController.getAllUsers);
 
 /*router.get("/:id", async(req: Request, res: Response) => {
     try {
@@ -66,7 +109,7 @@ router.get("/:id", checkIdParam, userController.getAllUsers);
  *              description: Erreur interne du serveur
  *      
  */
-router.post("/:id", checkIdParam, userController.postUsers);
+router.post("/", userController.postUsers);
 
 
 

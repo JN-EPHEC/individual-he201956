@@ -1,8 +1,26 @@
 import type { NextFunction, Request, Response } from "express";
-import User from "../models/User";
+import User from "../models/User.js";
 import { Op } from "sequelize";
 
-//GET Users
+
+//GET User By ID
+export const getUserById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const id = Number(req.params.id);
+        const user = await User.findByPk(id);
+
+        if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
+
+        res.status(200).json(user);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
+
+//GET All Users
 export const getAllUsers =  async(req: Request, res: Response, next: NextFunction) => {
     try {
         const search = req.query.search as string;
