@@ -1,19 +1,14 @@
-.container {
-  max-width: 600px;
-  margin: 40px auto;
-  font-family: Arial, sans-serif;
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
 }
 
-h1 {
-  text-align: center;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
