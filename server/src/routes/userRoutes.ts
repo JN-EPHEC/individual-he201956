@@ -1,8 +1,8 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
 import User from "../models/User.js";
-import * as userController from "../controllers/userController.js";
-import { checkIdParam } from "../middlewares/checkIdParam.js";
+import * as userController from "../controllers/userController";
+import { checkIdParam } from "../middlewares/checkIdParam";
 
 const router = Router();
 
